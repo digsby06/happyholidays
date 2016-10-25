@@ -1,10 +1,13 @@
 require 'tweetstream'
 require 'twitter'
-
+require 'mixpanel-ruby'
+require 'rake'
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
-  system('tweetstreamer.rb')
+th = Thread.new do
+  %x[bundle exec rake happyholidays:tweetstreamer]
+end
 
 
 end
