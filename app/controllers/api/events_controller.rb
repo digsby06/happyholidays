@@ -2,13 +2,6 @@ module Api
   class EventsController < ApplicationController
     before_action :set_event, only: [:show, :update, :destroy]
 
-    thr = Thread.new {
-          puts "thread"
-          timer
-          puts "timer is running"
-      }
-    $last_play_time = Time.now
-
     # GET /events
     def index
       @events = Event.all
@@ -27,17 +20,17 @@ module Api
       can_play = true
 
       if @event.save
+
         if can_play == true
+
           can_play = false
+
           Event.start_show
-
-
-        # Mixpanel is used to track each time a gesture event is triggered
-          require "mixpanel-ruby"
-          tracker = Mixpanel::Tracker.new("9ae4dc350f5c0a7ccf5a0cff913c4a4d")
-          tracker.track(@event.id, 'Event Triggered')
+          mixpanel_track_event
 
           can_play = true
+        end
+
         end
         render json: @event, status: :created
       else
@@ -61,40 +54,12 @@ module Api
       @event.destroy
     end
 
-
-    def self.start_ambient_mode
-      puts 'Now Starting Ambient Mode'
-      Event.start_show
+    def self.mixpanel_track_event
+      # Mixpanel is used to track each time a gesture event is triggered
+        require "mixpanel-ruby"
+        tracker = Mixpanel::Tracker.new("9ae4dc350f5c0a7ccf5a0cff913c4a4d")
+        tracker.track(@event.id, 'Event Triggered')
     end
-
-    def self.timer
-      puts 'Inside the timer block'
-      @@time_check_never_stop = true
-      puts @@time_check_never_stop
-        while @@time_check_never_stop
-            puts 'loop is working'
-            compare_time
-            sleep(5)
-            puts 'Time Compared'
-        end
-        puts "test123"
-    end
-
-
-    def self.compare_time
-      puts 'inside time comparison block'
-      time = Time.now
-      puts time
-      puts $last_play_time + 30
-      if time >= ($last_play_time + 30)
-        puts 'Enough time has passed without an event'
-        start_ambient_mode
-      else
-        puts 'Not this time'
-      end
-
-    end
-
 
     private
       # Use callbacks to share common setup or constraints between actions.

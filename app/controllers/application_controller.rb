@@ -9,5 +9,11 @@ th = Thread.new do
   %x[bundle exec rake happyholidays:tweetstreamer]
 end
 
+thr = Thread.new {
+      puts "thread"
+      Event.timer
+      puts "timer is running"
+  }
+
 
 end
