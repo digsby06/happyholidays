@@ -28,8 +28,12 @@ class Event < ApplicationRecord
     # sock.send(data, 0, '172.16.2.210', 52737 )
     # sock.close
 
+    puts 'Light Show started - check!'
     # Resets the last_play_time
     @@last_play_time = Time.now
+
+    sleep(18)
+
     puts 'The Show has ended'
   end
 

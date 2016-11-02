@@ -25,7 +25,6 @@ namespace :happyholidays do
 
           msg = status.text
           tag = "#sampletweetclt"
-          mention = "fuzzy"
 
           puts msg
           puts tag
